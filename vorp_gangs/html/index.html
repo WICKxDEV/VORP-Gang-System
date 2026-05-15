@@ -12,7 +12,7 @@
         <!-- Gang Management Menu -->
         <div id="main-menu" class="menu-container" v-if="view === 'management'">
             <div class="header">
-                <h1>{{ gang.name }}</h1>
+                <h1>{{ gang ? gang.name : 'Unknown Gang' }}</h1>
                 <p class="subtitle">Gang Management Dashboard</p>
                 <div class="header-decor"></div>
             </div>
@@ -25,12 +25,12 @@
                 </div>
                 <div class="stat-card">
                     <i class="fas fa-coins"></i>
-                    <span class="value text-gold">${{ gang.balance.toFixed(2) }}</span>
+                    <span class="value text-gold">${{ gang && gang.balance ? gang.balance.toFixed(2) : '0.00' }}</span>
                     <span class="label">Treasury</span>
                 </div>
                 <div class="stat-card">
                     <i class="fas fa-crown"></i>
-                    <span class="value">{{ ranks[myRank].name }}</span>
+                    <span class="value">{{ getRankName(myRank) }}</span>
                     <span class="label">Your Rank</span>
                 </div>
             </div>
@@ -46,8 +46,8 @@
                     <div class="member-list scrollable">
                         <div v-for="(member, charId) in gang.members" :key="charId" class="member-item">
                             <div class="member-info">
-                                <span class="name">{{ charId }}</span>
-                                <span class="rank-badge" :class="'rank-' + member.rank">{{ ranks[member.rank].name }}</span>
+                                <span class="name">{{ member.name || 'Unknown Outlaw' }}</span>
+                                <span class="rank-badge" :class="'rank-' + member.rank">{{ getRankName(member.rank) }}</span>
                             </div>
                             <div class="actions" v-if="shouldShowActions(member)">
                                 <button class="btn-icon" @click="promote(charId, member.rank)" v-if="can('manage_ranks') && member.rank < 4">

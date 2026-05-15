@@ -10,35 +10,53 @@ end)
 Citizen.CreateThread(function()
     while true do
         Citizen.Wait(0)
-        if IsControlJustPressed(0, 0xDFF812F9) then -- 'J' key by default (0xDFF812F9 is J)
+        if IsControlJustPressed(0, 0xF155C67B) then -- 'O' key (0xF155C67B)
             OpenGangMenu()
         end
     end
 end)
 
+-- Command to open Menu
+RegisterCommand('gang', function()
+    OpenGangMenu()
+end, false)
+
 function OpenGangMenu()
     if isMenuOpen then return end
     
-    VORPcore.rpcCall('vorp_gangs:callback:GetMyGang', nil, function(data)
-        if data then
-            MyGangData = data
-            isMenuOpen = true
-            SetNuiFocus(true, true)
-            SendNUIMessage({
-                action = "openMenu",
-                gang = data.gang,
-                myRank = data.myRank,
-                ranks = Config.Ranks
-            })
-        else
-            -- Prompt to create gang if not in one
-            local input = VORPcore.CustomPrompt("Create Gang", "Enter Name", "Gang Name")
-            if input then
-                TriggerServerEvent('vorp_gangs:server:CreateGang', input)
-            end
-        end
-    end)
+    TriggerServerEvent('vorp_gangs:server:GetMyGangData')
 end
+
+RegisterNetEvent('vorp_gangs:client:OpenMenu')
+AddEventHandler('vorp_gangs:client:OpenMenu', function(data)
+    if not data then
+        -- Use standard VORP Inputs for gang creation
+        TriggerEvent("vorp_inputs:get", function(cb)
+            local gangName = cb({
+                title = "Create Gang",
+                text = "Enter Name",
+                type = "text",
+                placeholder = "Gang Name",
+                style = "glass",
+            })
+            
+            if gangName and gangName ~= "" then
+                TriggerServerEvent('vorp_gangs:server:CreateGang', gangName)
+            end
+        end)
+        return
+    end
+
+    MyGangData = data
+    isMenuOpen = true
+    SetNuiFocus(true, true)
+    SendNUIMessage({
+        action = "openMenu",
+        gang = data.gang,
+        myRank = data.myRank,
+        ranks = Config.Ranks
+    })
+end)
 
 -- Invite received from server
 RegisterNetEvent('vorp_gangs:client:ReceiveInvite')

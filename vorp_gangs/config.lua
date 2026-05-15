@@ -21,7 +21,7 @@ Config.Ranks = {
 }
 
 -- Keys
-Config.OpenMenuKey = "J" -- Key to open gang menu
+Config.OpenMenuKey = "O" -- Key to open gang menu
 
 -- Webhooks
 Config.Webhooks = {

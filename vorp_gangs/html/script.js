@@ -22,7 +22,13 @@ const app = createApp({
             const rankData = this.ranks[this.myRank];
             return rankData && rankData.permissions.includes(permission);
         },
+        getRankName(rankId) {
+            if (!this.ranks) return 'Unknown';
+            const rank = this.ranks[rankId.toString()];
+            return rank ? rank.name : 'Unknown';
+        },
         shouldShowActions(member) {
+            if (!this.gang || !member) return false;
             // Cannot take actions on yourself or those of equal/higher rank (except Leaders)
             if (member.char_id === this.gang.owner) return false;
             if (this.myRank === 5) return true; // Leader can do anything

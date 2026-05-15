@@ -40,10 +40,12 @@ The `config.lua` allows you to customize:
 
 ## 🎮 How to Use
 
-- **Open Menu**: Press `J` (default) to open the Gang Management Menu.
-- **Create Gang**: If you aren't in a gang, you will be prompted to create one (requires $150).
-- **Invite**: Stand near a player and use the "Invite Nearby" button in the menu.
-- **Manage**: Leaders and Co-Leaders can promote/demote or kick members directly from the UI.
+- **Open Menu**: Press `O` (default) or use `/gang` command to open the Gang Management Menu.
+- **Create Gang**: Use `/creategang [name]` or press the open menu key to start the creation process (requires $150).
+- **Check Status**: Use `/mygang` to see your current gang and rank.
+- **Leave**: Use `/leavegang` to quit your current gang (Members/Enforcers only).
+- **Invite/Kick (ID)**: Use `/ganginvite [id]` or `/gangkick [id]` for quick member management.
+- **Invite (Near)**: Stand near a player and use the "Invite Nearby" button in the menu.
 
 ## 🛠️ Technical Details
 
