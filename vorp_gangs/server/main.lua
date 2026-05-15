@@ -43,12 +43,11 @@ function GetPlayerGang(char_id)
     return nil, nil
 end
 
--- Create Gang Command
-RegisterServerEvent('vorp_gangs:server:CreateGang')
-AddEventHandler('vorp_gangs:server:CreateGang', function(gangName)
-    local src = source
+-- Function: Create Gang Logic
+local function CreateGangInternal(src, gangName)
     local Character = VORPcore.getUser(src).getUsedCharacter
-    local charIdentifier = Character.identifier
+    if not Character then return end
+    
     local char_id = Character.charIdentifier
     local money = Character.money
 
@@ -85,8 +84,25 @@ AddEventHandler('vorp_gangs:server:CreateGang', function(gangName)
                 }
             }
             VORPcore.NotifyLeft(src, "Gang", string.format(Config.Locales['gang_created'], gangName), "generic_textures", "tick", 4000)
+            TriggerClientEvent('vorp_gangs:client:UpdateSync', -1, Gangs)
         end
     end)
+end
+
+-- Create Gang Command
+VORPcore.addCommand('creategang', { "everyone" }, function(source, args)
+    local gangName = table.concat(args, " ")
+    if gangName == "" then
+        VORPcore.NotifyLeft(source, "Gang", "Usage: /creategang [name]", "generic_textures", "tick", 4000)
+        return
+    end
+    CreateGangInternal(source, gangName)
+end, "Create a new gang")
+
+-- Create Gang Event
+RegisterServerEvent('vorp_gangs:server:CreateGang')
+AddEventHandler('vorp_gangs:server:CreateGang', function(gangName)
+    CreateGangInternal(source, gangName)
 end)
 
 -- Invite Player
